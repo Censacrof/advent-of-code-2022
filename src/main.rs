@@ -1,11 +1,11 @@
-mod binary_search_tree;
+mod lib;
 
 use std::{
     cmp::max,
     io::{self, Read},
 };
 
-use binary_search_tree::BinaryTree;
+use lib::binary_search_tree::BinaryTree;
 
 fn main() -> io::Result<()> {
     let mut buffer: String = String::new();
