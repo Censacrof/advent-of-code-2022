@@ -1,7 +1,17 @@
-use std::cmp::max;
+use std::{
+    cmp::max,
+    io::{self, Read},
+};
 
-fn main() {
-    println!("Hello, world!");
+fn main() -> io::Result<()> {
+    let mut buffer: String = String::new();
+    let _bytes_read = io::stdin().read_to_string(&mut buffer);
+
+    let most_cals = calculacte_most_calories(&buffer);
+
+    println!("{}", most_cals);
+
+    Ok(())
 }
 
 fn calculacte_most_calories(calories_list: &str) -> i32 {
