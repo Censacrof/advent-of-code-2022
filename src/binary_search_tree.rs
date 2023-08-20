@@ -4,7 +4,7 @@ pub struct BinaryTree {
     r: Option<Box<BinaryTree>>,
 }
 
-impl<'a> BinaryTree {
+impl BinaryTree {
     pub fn new(v: i32) -> Self {
         Self {
             v,
@@ -28,6 +28,24 @@ impl<'a> BinaryTree {
             None => self.r = Some(Box::new(BinaryTree::new(v))),
         };
     }
+
+    pub fn traverse(&self) -> Vec<i32> {
+        let mut res = Vec::<i32>::new();
+        self._traverse_inner(&mut res);
+        return res;
+    }
+
+    fn _traverse_inner(&self, res: &mut Vec<i32>) {
+        if let Some(l) = &self.l {
+            l._traverse_inner(res)
+        }
+
+        res.push(self.v.clone());
+
+        if let Some(r) = &self.r {
+            r._traverse_inner(res)
+        }
+    }
 }
 
 #[cfg(test)]
@@ -50,5 +68,22 @@ mod test {
 
         root.binary_insert_desc(7);
         assert_eq!(root.l.as_mut().unwrap().l.as_mut().unwrap().v, 7);
+    }
+
+    #[test]
+    fn it_traverses_correctly() {
+        let mut root = BinaryTree::new(3);
+        root.binary_insert_desc(1);
+        root.binary_insert_desc(5);
+        root.binary_insert_desc(4);
+        root.binary_insert_desc(7);
+
+        let traversed = root.traverse();
+
+        assert_eq!(traversed.get(0).unwrap().to_owned(), 7);
+        assert_eq!(traversed.get(1).unwrap().to_owned(), 5);
+        assert_eq!(traversed.get(2).unwrap().to_owned(), 4);
+        assert_eq!(traversed.get(3).unwrap().to_owned(), 3);
+        assert_eq!(traversed.get(4).unwrap().to_owned(), 1);
     }
 }
