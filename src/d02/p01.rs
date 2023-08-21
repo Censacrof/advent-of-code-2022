@@ -12,7 +12,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug)]
 enum Move {
     Rock,
     Paper,
@@ -21,7 +21,7 @@ enum Move {
 
 use Move::*;
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug)]
 enum Outcome {
     Win,
     Lose,
@@ -30,7 +30,7 @@ enum Outcome {
 
 use Outcome::*;
 
-#[derive(PartialEq, Eq, Hash, Clone, Copy)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug)]
 enum ScoreLookupKey {
     MoveScore(Move),
     OutcomeScore(Outcome),
@@ -66,7 +66,7 @@ fn calculate_score(input: &str) -> i32 {
         (MoveScore(Scissor), 3),
         (OutcomeScore(Lose), 0),
         (OutcomeScore(Draw), 3),
-        (OutcomeScore(Draw), 6),
+        (OutcomeScore(Win), 6),
     ]);
 
     let lines = input.lines();
@@ -81,8 +81,9 @@ fn calculate_score(input: &str) -> i32 {
 
         let outcome = outcome_lookup.get(&(*opponent_move, *our_move)).unwrap();
 
-        let round_score = score_lookup.get(&OutcomeScore(*outcome)).unwrap()
-            + score_lookup.get(&MoveScore(*our_move)).unwrap();
+        println!("outcome {:?}", outcome);
+        let round_score = score_lookup.get(&OutcomeScore(outcome.clone())).unwrap()
+            + score_lookup.get(&MoveScore(our_move.clone())).unwrap();
 
         tot += round_score;
     }
