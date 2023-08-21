@@ -24,3 +24,8 @@ path = "src/d02/p01.rs"
 [[bin]]
 name = "d02p02"
 path = "src/d02/p02.rs"
+
+# Day 3
+[[bin]]
+name = "d03p01"
+path = "src/d03/p01.rs"
