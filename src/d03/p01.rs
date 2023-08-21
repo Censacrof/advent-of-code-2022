@@ -33,6 +33,17 @@ fn get_repeated_char(rucksack: &str) -> char {
     return intersection.next().unwrap().clone();
 }
 
+fn get_char_priority(c: char) -> u32 {
+    let ascii = c as u32;
+    println!("{}", ascii);
+
+    if ascii >= 'a' as u32 {
+        return ascii - 'a' as u32 + 1;
+    }
+
+    return ascii - 'A' as u32 + (b'z' - b'a') as u32 + 2;
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -59,6 +70,29 @@ mod test {
             example_4: "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn" => 'v'
             example_5: "ttgJtRGJQctTZtZT" => 't'
             example_6: "CrZsJsPPZsGzwwsLwLmpwMDw" => 's'
+        }
+    }
+
+    mod test_get_char_priority {
+        use super::*;
+
+        macro_rules! test_get_char_priority {
+            ($($name:ident: $input:expr => $expected:expr)*) => {
+                $(
+                    #[test]
+                    fn $name() {
+                        let res = get_char_priority($input);
+                        assert_eq!(res, $expected);
+                    }
+                )*
+            };
+        }
+
+        test_get_char_priority! {
+            priority_a: 'a' => 1
+            priority_z: 'z' => 26
+            priority_upper_a: 'A' => 27
+            priority_upper_z: 'Z' => 52
         }
     }
 }
