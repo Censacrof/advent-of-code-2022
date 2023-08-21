@@ -44,6 +44,12 @@ fn get_char_priority(c: char) -> u32 {
     return ascii - 'A' as u32 + (b'z' - b'a') as u32 + 2;
 }
 
+fn get_total_priority(input: &str) -> u32 {
+    input.lines().fold(0, |acc, rucksack| {
+        get_char_priority(get_repeated_char(rucksack)) + acc
+    })
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -94,5 +100,11 @@ mod test {
             priority_upper_a: 'A' => 27
             priority_upper_z: 'Z' => 52
         }
+    }
+
+    #[test]
+    fn test_get_total_priority() {
+        let res = get_total_priority("vJrwpWtwJgWrhcsFMMfFFhFp\njqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\nPmmdzqPrVvPwwTWBwg\nwMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\nttgJtRGJQctTZtZT\nCrZsJsPPZsGzwwsLwLmpwMDw\n");
+        assert_eq!(res, 157);
     }
 }
