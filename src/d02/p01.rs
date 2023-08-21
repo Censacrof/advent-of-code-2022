@@ -7,7 +7,9 @@ fn main() -> io::Result<()> {
     let mut buffer: String = String::new();
     let _bytes_read = io::stdin().read_to_string(&mut buffer);
 
-    println!("{:?}", _bytes_read);
+    let result = calculate_score(&buffer);
+
+    println!("{:?}", result);
 
     Ok(())
 }
@@ -81,7 +83,6 @@ fn calculate_score(input: &str) -> i32 {
 
         let outcome = outcome_lookup.get(&(*opponent_move, *our_move)).unwrap();
 
-        println!("outcome {:?}", outcome);
         let round_score = score_lookup.get(&OutcomeScore(outcome.clone())).unwrap()
             + score_lookup.get(&MoveScore(our_move.clone())).unwrap();
 
