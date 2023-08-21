@@ -20,3 +20,7 @@ path = "src/d01/p02.rs"
 [[bin]]
 name = "d02p01"
 path = "src/d02/p01.rs"
+
+[[bin]]
+name = "d02p02"
+path = "src/d02/p02.rs"
