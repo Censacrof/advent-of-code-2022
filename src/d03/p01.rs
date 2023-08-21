@@ -1,14 +1,15 @@
 use std::{
-    collections::{btree_set::Intersection, HashSet},
+    collections::HashSet,
     io::{self, Read},
-    ops::Deref,
 };
 
 fn main() -> io::Result<()> {
     let mut buffer: String = String::new();
     let _bytes_read = io::stdin().read_to_string(&mut buffer);
 
-    println!("{:?}", _bytes_read);
+    let res = get_total_priority(&buffer);
+
+    println!("{:?}", res);
 
     Ok(())
 }
@@ -35,7 +36,6 @@ fn get_repeated_char(rucksack: &str) -> char {
 
 fn get_char_priority(c: char) -> u32 {
     let ascii = c as u32;
-    println!("{}", ascii);
 
     if ascii >= 'a' as u32 {
         return ascii - 'a' as u32 + 1;
