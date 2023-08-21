@@ -1,5 +1,5 @@
 [package]
-name = "d01"
+name = "advent_of_code_2022"
 version = "0.1.0"
 edition = "2021"
 
@@ -9,9 +9,9 @@ edition = "2021"
 
 
 [[bin]]
-name = "d01"
-path = "src/d01.rs"
+name = "d01p01"
+path = "src/d01/p01.rs"
 
 [[bin]]
-name = "d02"
-path = "src/d02.rs"
+name = "d01p02"
+path = "src/d01/p02.rs"

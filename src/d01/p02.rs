@@ -1,8 +1,6 @@
-mod utils;
-
 use std::io::{self, Read};
 
-use utils::binary_search_tree::BinaryTree;
+use advent_of_code_2022::common::binary_search_tree::BinaryTree;
 
 fn main() -> io::Result<()> {
     let mut buffer: String = String::new();
