@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 
-
+# Day 1
 [[bin]]
 name = "d01p01"
 path = "src/d01/p01.rs"
@@ -15,3 +15,8 @@ path = "src/d01/p01.rs"
 [[bin]]
 name = "d01p02"
 path = "src/d01/p02.rs"
+
+# Day 2
+[[bin]]
+name = "d02p01"
+path = "src/d02/p01.rs"
