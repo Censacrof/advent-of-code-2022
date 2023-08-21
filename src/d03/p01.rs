@@ -10,7 +10,7 @@ fn main() -> io::Result<()> {
 }
 
 fn get_repeated_char(rucksack: &str) -> char {
-    unimplemented!();
+    unimplemented!()
 }
 
 #[cfg(test)]
@@ -19,8 +19,9 @@ mod test {
 
     mod test_get_repeated_char {
         use super::*;
+
         macro_rules! test_get_repeated_char {
-            ($($name:ident($input:expr, $expected:expr);)*) => {
+            ($($name:ident: $input:expr => $expected:expr)*) => {
                 $(
                     #[test]
                     fn $name() {
@@ -32,17 +33,12 @@ mod test {
         }
 
         test_get_repeated_char! {
-            example_1("vJrwpWtwJgWrhcsFMMfFFhFp", 'p');
-
-            example_2("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", 'L');
-
-            example_3("PmmdzqPrVvPwwTWBwg", 'P');
-
-            example_4("wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", 'v');
-
-            example_5("ttgJtRGJQctTZtZT", 't');
-
-            example_6("CrZsJsPPZsGzwwsLwLmpwMDw", 's');
+            example_1: "vJrwpWtwJgWrhcsFMMfFFhFp" => 'p'
+            example_2: "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL" => 'L'
+            example_3: "PmmdzqPrVvPwwTWBwg" => 'P'
+            example_4: "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn" => 'v'
+            example_5: "ttgJtRGJQctTZtZT" => 't'
+            example_6: "CrZsJsPPZsGzwwsLwLmpwMDw" => 's'
         }
     }
 }
