@@ -1,4 +1,8 @@
-use std::io::{self, Read};
+use std::{
+    collections::{btree_set::Intersection, HashSet},
+    io::{self, Read},
+    ops::Deref,
+};
 
 fn main() -> io::Result<()> {
     let mut buffer: String = String::new();
@@ -10,7 +14,23 @@ fn main() -> io::Result<()> {
 }
 
 fn get_repeated_char(rucksack: &str) -> char {
-    unimplemented!()
+    let chars = rucksack.chars().collect::<Vec<char>>();
+
+    let (lower, higher) = chars.split_at(chars.len() / 2);
+
+    let mut a: HashSet<char, _> = HashSet::new();
+    for c in lower {
+        a.insert(c.clone());
+    }
+
+    let mut b: HashSet<char, _> = HashSet::new();
+    for c in higher {
+        b.insert(c.clone());
+    }
+
+    let mut intersection = a.intersection(&b);
+
+    return intersection.next().unwrap().clone();
 }
 
 #[cfg(test)]
