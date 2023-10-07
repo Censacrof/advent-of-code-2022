@@ -20,7 +20,7 @@ pub fn main() !void {
 
     const result = get_most_calories(buffer);
 
-    try stdout.print("{d}\n", .{result});
+    try stdout.print("foffo {d}\n", .{result});
 
     try bw.flush(); // don't forget to flush!
 }

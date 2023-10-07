@@ -84,13 +84,20 @@ pub fn build(b: *std.Build) !void {
     // and can be selected like this: `zig build run`
     // This will evaluate the `run` step rather than the default, which is "install".
     const run_step = b.step("run", "Run the app");
+    const exec_opt = b.option([]const u8, "exec", "filters by executable name");
+
     // Similar to creating the run step earlier, this exposes a `test` step to
     // the `zig build --help` menu, providing a way for the user to request
     // running the unit tests.
     const test_step = b.step("test", "Run unit tests");
     for (execRuns.items) |execRun| {
-        run_step.dependOn(&execRun.run.step);
+        if (exec_opt) |executable| {
+            if (!std.mem.eql(u8, executable, execRun.name)) {
+                continue;
+            }
+        }
 
+        run_step.dependOn(&execRun.run.step);
         test_step.dependOn(&execRun.run_unit_tests.step);
     }
 }
