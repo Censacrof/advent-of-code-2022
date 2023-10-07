@@ -1,9 +1,6 @@
 const std = @import("std");
 
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
-
     // stdout is for the actual output of your application, for example if you
     // are implementing gzip, then only the compressed bytes should be sent to
     // stdout, not any debugging messages.
@@ -11,12 +8,24 @@ pub fn main() !void {
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+    var inputFile = try std.fs.cwd().openFile("input.txt", .{ .mode = .read_only });
+    defer inputFile.close();
+
+    const file_size = (try inputFile.stat()).size;
+    const allocator = std.heap.page_allocator;
+
+    var buffer = try allocator.alloc(u8, file_size);
+    defer allocator.free(buffer);
+    try inputFile.reader().readNoEof(buffer);
+
+    const result = get_most_calories(buffer);
+
+    try stdout.print("{d}\n", .{result});
 
     try bw.flush(); // don't forget to flush!
 }
 
-fn getMostCalories(caloriesList: []const u8) i32 {
+fn get_most_calories(caloriesList: []const u8) i32 {
     var lines = std.mem.split(u8, caloriesList, "\n");
 
     var max: i32 = 0;
@@ -32,13 +41,6 @@ fn getMostCalories(caloriesList: []const u8) i32 {
 
     max = @max(max, acc);
     return max;
-}
-
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
 }
 
 test "case 0" {
@@ -59,5 +61,5 @@ test "case 0" {
         \\10000
     ;
 
-    try std.testing.expectEqual(getMostCalories(input), @as(i32, 24000));
+    try std.testing.expectEqual(get_most_calories(input), @as(i32, 24000));
 }
