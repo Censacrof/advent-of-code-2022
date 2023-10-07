@@ -1,4 +1,6 @@
 const std = @import("std");
+const ArrayList = std.ArrayList;
+const allocator = std.heap.page_allocator;
 
 pub fn main() !void {
     // stdout is for the actual output of your application, for example if you
@@ -12,35 +14,49 @@ pub fn main() !void {
     defer inputFile.close();
 
     const file_size = (try inputFile.stat()).size;
-    const allocator = std.heap.page_allocator;
 
     var buffer = try allocator.alloc(u8, file_size);
     defer allocator.free(buffer);
     try inputFile.reader().readNoEof(buffer);
 
-    const result = get_most_calories(buffer);
+    const result = try get_top_3_total_calories(buffer);
 
-    try stdout.print("foffo {d}\n", .{result});
+    try stdout.print("{d}\n", .{result});
 
     try bw.flush(); // don't forget to flush!
 }
 
-fn get_most_calories(caloriesList: []const u8) i32 {
+fn get_top_3_total_calories(caloriesList: []const u8) !i32 {
     var lines = std.mem.split(u8, caloriesList, "\n");
 
-    var max: i32 = 0;
+    var elvsCalories = ArrayList(i32).init(allocator);
+    defer elvsCalories.deinit();
+
     var acc: i32 = 0;
     while (lines.next()) |line| {
         const cals = std.fmt.parseInt(i32, line, 10) catch {
-            max = @max(max, acc);
+            try elvsCalories.append(acc);
             acc = 0;
             continue;
         };
         acc += cals;
     }
 
-    max = @max(max, acc);
-    return max;
+    try elvsCalories.append(acc);
+
+    var elvesCaloriesSlice = try elvsCalories.toOwnedSlice();
+    std.sort.pdq(i32, elvesCaloriesSlice, {}, std.sort.desc(i32));
+
+    var tot: i32 = 0;
+    for (elvesCaloriesSlice, 0..) |cals, i| {
+        if (i > 2) {
+            break;
+        }
+
+        tot += cals;
+    }
+
+    return tot;
 }
 
 test "case 0" {
@@ -61,5 +77,8 @@ test "case 0" {
         \\10000
     ;
 
-    try std.testing.expectEqual(get_most_calories(input), @as(i32, 24000));
+    try std.testing.expectEqual(
+        @as(i32, 45000),
+        try get_top_3_total_calories(input),
+    );
 }

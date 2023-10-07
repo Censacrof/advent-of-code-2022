@@ -61,5 +61,8 @@ test "case 0" {
         \\10000
     ;
 
-    try std.testing.expectEqual(get_most_calories(input), @as(i32, 24000));
+    try std.testing.expectEqual(
+        @as(i32, 24000),
+        get_most_calories(input),
+    );
 }
