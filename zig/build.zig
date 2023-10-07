@@ -80,6 +80,9 @@ pub fn build(b: *std.Build) !void {
     try execRuns.append(addExecPath(b, target, optimize, "src/d01/p01.zig", "d01p01"));
     try execRuns.append(addExecPath(b, target, optimize, "src/d01/p02.zig", "d01p02"));
 
+    try execRuns.append(addExecPath(b, target, optimize, "src/d02/p01.zig", "d02p01"));
+    // try execRuns.append(addExecPath(b, target, optimize, "src/d02/p02.zig", "d02p02"));
+
     // This creates a build step. It will be visible in the `zig build --help` menu,
     // and can be selected like this: `zig build run`
     // This will evaluate the `run` step rather than the default, which is "install".

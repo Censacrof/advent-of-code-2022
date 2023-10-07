@@ -10,7 +10,7 @@ pub fn main() !void {
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    var inputFile = try std.fs.cwd().openFile("input.txt", .{ .mode = .read_only });
+    var inputFile = try std.fs.cwd().openFile("src/d01/input.txt", .{ .mode = .read_only });
     defer inputFile.close();
 
     const file_size = (try inputFile.stat()).size;

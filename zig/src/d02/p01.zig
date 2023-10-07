@@ -8,7 +8,7 @@ pub fn main() !void {
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    var inputFile = try std.fs.cwd().openFile("src/d01/input.txt", .{ .mode = .read_only });
+    var inputFile = try std.fs.cwd().openFile("input.txt", .{ .mode = .read_only });
     defer inputFile.close();
 
     const file_size = (try inputFile.stat()).size;
@@ -18,51 +18,28 @@ pub fn main() !void {
     defer allocator.free(buffer);
     try inputFile.reader().readNoEof(buffer);
 
-    const result = get_most_calories(buffer);
+    const result = compute_tota_score(buffer);
 
     try stdout.print("{d}\n", .{result});
 
     try bw.flush(); // don't forget to flush!
 }
 
-fn get_most_calories(caloriesList: []const u8) i32 {
-    var lines = std.mem.split(u8, caloriesList, "\n");
-
-    var max: i32 = 0;
-    var acc: i32 = 0;
-    while (lines.next()) |line| {
-        const cals = std.fmt.parseInt(i32, line, 10) catch {
-            max = @max(max, acc);
-            acc = 0;
-            continue;
-        };
-        acc += cals;
-    }
-
-    max = @max(max, acc);
-    return max;
+fn compute_tota_score(input: []const u8) i32 {
+    _ = input;
+    return 0;
 }
 
 test "case 0" {
     const input =
-        \\1000
-        \\2000
-        \\3000
+        \\A Y
+        \\B X
+        \\C Z
         \\
-        \\4000
-        \\
-        \\5000
-        \\6000
-        \\
-        \\7000
-        \\8000
-        \\9000
-        \\
-        \\10000
     ;
 
     try std.testing.expectEqual(
-        @as(i32, 24000),
-        get_most_calories(input),
+        @as(i32, 15),
+        compute_tota_score(input),
     );
 }
