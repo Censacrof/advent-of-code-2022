@@ -62,6 +62,8 @@ fn addExecPath(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin
     };
 }
 
+const BuildError = error{ExecNotFound};
+
 pub fn build(b: *std.Build) !void {
     // Standard target options allows the person running `zig build` to choose
     // what target to build for. Here we do not override the defaults, which
@@ -83,6 +85,8 @@ pub fn build(b: *std.Build) !void {
     try execRuns.append(addExecPath(b, target, optimize, "src/d02/p01.zig", "d02p01"));
     try execRuns.append(addExecPath(b, target, optimize, "src/d02/p02.zig", "d02p02"));
 
+    try execRuns.append(addExecPath(b, target, optimize, "src/d03/p01.zig", "d03p01"));
+
     // This creates a build step. It will be visible in the `zig build --help` menu,
     // and can be selected like this: `zig build run`
     // This will evaluate the `run` step rather than the default, which is "install".
@@ -92,6 +96,7 @@ pub fn build(b: *std.Build) !void {
     // Similar to creating the run step earlier, this exposes a `test` step to
     // the `zig build --help` menu, providing a way for the user to request
     // running the unit tests.
+    var atLeastOneMatch = false;
     const test_step = b.step("test", "Run unit tests");
     for (execRuns.items) |execRun| {
         if (exec_opt) |executable| {
@@ -100,7 +105,12 @@ pub fn build(b: *std.Build) !void {
             }
         }
 
+        atLeastOneMatch = true;
         run_step.dependOn(&execRun.run.step);
         test_step.dependOn(&execRun.run_unit_tests.step);
+    }
+
+    if (exec_opt != null and !atLeastOneMatch) {
+        return BuildError.ExecNotFound;
     }
 }

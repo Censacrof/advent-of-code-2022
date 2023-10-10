@@ -1,0 +1,6 @@
+--2023-10-10 22:56:50--  https://adventofcode.com/2022/day/3/input
+Resolving adventofcode.com (adventofcode.com)... 34.232.209.152, 44.208.105.42
+Connecting to adventofcode.com (adventofcode.com)|34.232.209.152|:443... connected.
+HTTP request sent, awaiting response... 400 Bad Request
+2023-10-10 22:56:51 ERROR 400: Bad Request.
+
