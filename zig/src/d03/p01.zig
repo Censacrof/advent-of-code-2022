@@ -1,4 +1,7 @@
 const std = @import("std");
+const math = @import("std").math;
+
+const allocator = std.heap.page_allocator;
 
 pub fn main() !void {
     // stdout is for the actual output of your application, for example if you
@@ -8,11 +11,10 @@ pub fn main() !void {
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
 
-    var inputFile = try std.fs.cwd().openFile("src/d02/input.txt", .{ .mode = .read_only });
+    var inputFile = try std.fs.cwd().openFile("src/d03/input.txt", .{ .mode = .read_only });
     defer inputFile.close();
 
     const file_size = (try inputFile.stat()).size;
-    const allocator = std.heap.page_allocator;
 
     var buffer = try allocator.alloc(u8, file_size);
     defer allocator.free(buffer);
@@ -25,9 +27,45 @@ pub fn main() !void {
     try bw.flush(); // don't forget to flush!
 }
 
+fn getFirstIntersectedChar(a: []const u8, b: []const u8) !?u8 {
+    var charset_a = std.AutoHashMap(u8, void).init(allocator);
+    defer charset_a.deinit();
+
+    for (a, 0..) |c, i| {
+        _ = i;
+        try charset_a.put(c, {});
+    }
+
+    for (b, 0..) |c, i| {
+        _ = i;
+        if (charset_a.contains(c)) {
+            return c;
+        }
+    }
+
+    return null;
+}
+
+const ComputePrioritiesSumError = error{NoRepeatedItemFoundInLine};
+
 fn computePrioritiesSum(input: []const u8) !i32 {
-    _ = input;
-    return 0;
+    var lines = std.mem.splitScalar(u8, input, '\n');
+
+    var tot: i32 = 0;
+    while (lines.next()) |line| {
+        if (line.len < 2) {
+            continue;
+        }
+
+        const halfLen: usize = @divFloor(line.len, @as(i32, 2));
+        const intersected_char = try getFirstIntersectedChar(line[0..halfLen], line[halfLen..]);
+        if (intersected_char == null) {
+            return ComputePrioritiesSumError.NoRepeatedItemFoundInLine;
+        }
+        tot += try getPriority(if (intersected_char) |c| c else unreachable);
+    }
+
+    return tot;
 }
 
 const GetPriorityError = error{InvalidChar};
@@ -54,20 +92,18 @@ test "priority fn" {
 }
 
 test "case 0" {
-    return error.SkipZigTest;
+    const input =
+        \\vJrwpWtwJgWrhcsFMMfFFhFp
+        \\jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+        \\PmmdzqPrVvPwwTWBwg
+        \\wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+        \\ttgJtRGJQctTZtZT
+        \\CrZsJsPPZsGzwwsLwLmpwMDw
+        \\
+    ;
 
-    //const input =
-    //    \\vJrwpWtwJgWrhcsFMMfFFhFp
-    //    \\jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-    //    \\PmmdzqPrVvPwwTWBwg
-    //    \\wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-    //    \\ttgJtRGJQctTZtZT
-    //    \\CrZsJsPPZsGzwwsLwLmpwMDw
-    //    \\
-    //;
-
-    //try std.testing.expectEqual(
-    //    @as(i32, 157),
-    //    try computePrioritiesSum(input),
-    //);
+    try std.testing.expectEqual(
+        @as(i32, 157),
+        try computePrioritiesSum(input),
+    );
 }
